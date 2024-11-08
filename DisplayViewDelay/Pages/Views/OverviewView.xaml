@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             xmlns:dx="http://schemas.devexpress.com/maui"
+             xmlns:controls="clr-namespace:DisplayViewDelay.Pages.Views.Controls.CustomSwipeView"
+             xmlns:labelControls="clr-namespace:DisplayViewDelay.Pages.Views.Controls.CustomLabel"
+             xmlns:viewModels="clr-namespace:DisplayViewDelay.ViewModels"
+             xmlns:databaseModels="clr-namespace:DisplayViewDelayDatabase.Models;assembly=DisplayViewDelayDatabase"
+             x:Class="DisplayViewDelay.Pages.Views.OverviewView">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style x:Key="BorderStyleView" TargetType="Border">
+                <Setter Property="Background" Value="{StaticResource White}" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10, 10, 10, 10" />
+                <Setter Property="Margin" Value="15" />
+                <Setter Property="Opacity" Value="0.9" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="VerticalOptions" Value="Start"/>
+            </Style>            
+            <Style x:Key="GroupHeaderStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="TextColor" Value="{StaticResource DarkOrange1}" />
+                <Setter Property="Margin" Value="0, 10, 0, 0" />
+            </Style>
+            <Style x:Key="GroupHeaderUnderlineStyle" TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="0.5" />
+                <Setter Property="Color" Value="{StaticResource Gray200}" />
+                <Setter Property="Margin" Value="0, 5" />
+            </Style>
+            <Style x:Key="BorderRoundedCornerStyle" TargetType="Border">
+                <Setter Property="StrokeShape" Value="RoundRectangle 10, 10, 10, 10" />
+            </Style>
+            <Style x:Key="SelectionDetailsLabelStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource Gray900}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+            <Style x:Key="SelectionDetailsValueStyle" TargetType="labelControls:CultureBasedNumberLabel">
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="TextColor" Value="{StaticResource Gray900}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+            <Style x:Key="SwipeItemStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+                <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    
+    <Grid VerticalOptions="StartAndExpand">
+
+        <!-- Can't use the BackgroundImageView here since there is a Bug that draws the image too big there is a gray stipe at the bottom -->
+        <Image x:Name="BackgroundImage" Source="background_image.jpg" VerticalOptions="StartAndExpand" HorizontalOptions="FillAndExpand" Aspect="AspectFill" Margin="{OnPlatform Android='0, -40, 0, 0', Default='0'}"/>
+
+        <Border x:Name="OverviewBorder" Grid.Row="0" Style="{StaticResource BorderStyleView}" VerticalOptions="StartAndExpand">
+
+            <Grid RowDefinitions="Auto, *">
+
+                <!--Search...-->
+                <SearchBar Grid.Row="0" ios:SearchBar.SearchBarStyle="Minimal" Text="{Binding SearchText}" Placeholder="Search Text ..." />
+
+                <!-- CollectionView: Margin to get the ScrollBar to the right and closer to the Border -->
+                <dx:DXCollectionView Grid.Row="1" ItemsSource="{Binding AvailableItems, Mode=TwoWay}" AllowGroupCollapse="False" FilterExpression="{Binding SearchFilterExpression}" Margin="10, 5, 10, 15">
+
+                    <!-- Group Description: FieldName used to group the items and Order in which they are grouped -->
+                    <dx:DXCollectionView.GroupDescription>
+                        <dx:GroupDescription FieldName="Name" GroupInterval="Alphabetical"/>
+                    </dx:DXCollectionView.GroupDescription>
+                    
+                    <!-- Group Header: to group items -->
+                    <dx:DXCollectionView.GroupHeaderTemplate>
+                        <DataTemplate>
+                            <VerticalStackLayout>
+                                <Label Text="{Binding Value, StringFormat=' {0}'}" Style="{StaticResource GroupHeaderStyle}" />
+                                <BoxView Style="{StaticResource GroupHeaderUnderlineStyle}"/>
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </dx:DXCollectionView.GroupHeaderTemplate>
+
+                    <!-- Group Items -->
+                    <dx:DXCollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type databaseModels:Food}">
+
+                            <controls:CustomSwipeView SwipeViewOpenFlag="{Binding SwipeViewOpenFlag, Source={RelativeSource AncestorType={x:Type viewModels:OverviewViewModel}}, Mode=TwoWay}">
+
+                                <Border Padding="20, 15, 20, 10" Style="{StaticResource BorderRoundedCornerStyle}">
+                                    <VerticalStackLayout x:DataType="databaseModels:Food">
+
+                                        <!-- Name -->
+                                        <Label Text="{Binding Name}" FontSize="13" FontAttributes="Bold" />
+
+
+                                        <!-- Brand -->
+                                        <Label Text="{Binding Brand}" FontSize="12" FontAttributes="Bold" TextColor="{StaticResource Gray500}" Margin="0, 5, 0, 0"/>
+
+
+                                        <!-- Bottom Row for values -->
+                                        <HorizontalStackLayout Margin="0, 15, 0, 0">
+                                            <HorizontalStackLayout HorizontalOptions="StartAndExpand">
+                                                <Image Source="dotnet_bot.png" HeightRequest="12" WidthRequest="12" Margin="0, 1, 5, 5"/>
+                                                <Label Text="Value 1:" Style="{StaticResource SelectionDetailsLabelStyle}" />
+                                                <labelControls:CultureBasedNumberLabel Text="{Binding Fats, Mode=OneWay, StringFormat='  {0:0.###}'}" Style="{StaticResource SelectionDetailsValueStyle}" />
+                                            </HorizontalStackLayout>
+
+                                            <HorizontalStackLayout HorizontalOptions="CenterAndExpand" Margin="5, 0, 0, 0">
+                                                <Image Source="dotnet_bot.png" HeightRequest="20" WidthRequest="20" Margin="0, -2, 0, 0" />
+                                                <Label Text="Value 2:" Style="{StaticResource SelectionDetailsLabelStyle}"/>
+                                                <labelControls:CultureBasedNumberLabel Text="{Binding Carbohydrates, Mode=OneWay, StringFormat='  {0:0.###}'}" Style="{StaticResource SelectionDetailsValueStyle}" />
+                                            </HorizontalStackLayout>
+
+                                            <HorizontalStackLayout HorizontalOptions="EndAndExpand" Margin="5, 0, 0, 0">
+                                                <Image Source="dotnet_bot.png" HeightRequest="16" WidthRequest="16" Margin="5, -1, 3, 2" />
+                                                <Label Text="Value 3:" Style="{StaticResource SelectionDetailsLabelStyle}"/>
+                                                <labelControls:CultureBasedNumberLabel Text="{Binding Proteins, Mode=OneWay, StringFormat='  {0:0.###}'}" Style="{StaticResource SelectionDetailsValueStyle}" />
+                                            </HorizontalStackLayout>
+                                        </HorizontalStackLayout>
+
+                                    </VerticalStackLayout>
+                                </Border>
+
+                                <SwipeView.RightItems>
+                                    <SwipeItems>
+                                        <SwipeItemView>
+
+                                            <Grid RowDefinitions="*" ColumnDefinitions="*, *" WidthRequest="160" HeightRequest="100" ColumnSpacing="0">
+                                                <Label Grid.Column="0" Text="Edit" BackgroundColor="LightGrey" Style="{StaticResource SwipeItemStyle}">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:OverviewViewModel}}, Path=EditFoodItemCommand}" CommandParameter="{Binding .}"/>
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+
+                                                <Label Grid.Column="1" Text="Delete" BackgroundColor="{StaticResource DarkOrange1}" TextColor="White" Style="{StaticResource SwipeItemStyle}">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:OverviewViewModel}}, Path=DeleteFoodItemCommand}" CommandParameter="{Binding .}"/>
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+                                            </Grid>
+
+                                        </SwipeItemView>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+
+                            </controls:CustomSwipeView>
+
+                        </DataTemplate>
+                    </dx:DXCollectionView.ItemTemplate>
+
+                </dx:DXCollectionView>
+                
+            </Grid>
+            
+        </Border>
+
+    </Grid>
+
+</ContentView>

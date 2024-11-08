@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:tabs="http://sharpnado.com"
+             xmlns:views="clr-namespace:DisplayViewDelay.Pages.Views"
+             xmlns:viewModels="clr-namespace:DisplayViewDelay.ViewModels"
+             x:DataType="viewModels:MainPageViewModel"
+             x:Class="DisplayViewDelay.Pages.MainPage">
+
+    <Grid>
+        <Grid x:Name="MainPageViewGrid" RowDefinitions="*, 55">
+
+            <!-- Switcher to switch between the different Views -->
+            <tabs:ViewSwitcher x:Name="ContentViewSwitcher"
+                               Grid.Row="0"
+                               Animate="True"
+                               SelectedIndex="{Binding SelectedViewModelIndex, Mode=TwoWay}">
+
+                <tabs:DelayedView x:TypeArguments="views:CalculateView"
+                                  BindingContext="{Binding Source={StaticResource CalculateViewModel}}"
+                                  AccentColor="{StaticResource Gray100}"
+                                  Animate="True"                              
+                                  UseActivityIndicator="True" />
+
+                <tabs:LazyView x:TypeArguments="views:OverviewView"
+                               BindingContext="{Binding Source={viewModels:OverviewViewModel}}"
+                               AccentColor="{StaticResource Gray100}"
+                               Animate="True"
+                               UseActivityIndicator="True" />
+
+            </tabs:ViewSwitcher>
+
+
+            <!-- Tabs at the Bottom -->
+            <tabs:TabHostView Grid.Row="1"
+                              BackgroundColor="White"
+                              Orientation="Horizontal"
+                              TabType="Fixed"
+                              SelectedIndex="{Binding Source={x:Reference ContentViewSwitcher}, Path=SelectedIndex, Mode=TwoWay}">
+
+                <tabs:TabHostView.Tabs>
+
+                    <!-- Tab: Calculate -->
+                    <tabs:BottomTabItem Style="{StaticResource BottomTab}"
+                                        IconImageSource="dotnet_bot.png"
+                                        Label="Tab 1"
+                                        Margin="5, 0, 0, 0"/>
+
+                    <!-- Tab: Overview -->
+                    <tabs:BottomTabItem Style="{StaticResource BottomTab}"
+                                        IconImageSource="dotnet_bot.png"
+                                        Label="Tab 2" />
+
+                </tabs:TabHostView.Tabs>
+            </tabs:TabHostView>
+        </Grid>
+
+
+        <!-- BottomSheet Control -->
+        <!-- ... -->
+        
+    </Grid>
+
+</ContentPage>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DisplayViewDelay.Pages.Views.CalculateView">
+
+    <VerticalStackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="20">
+
+        <Label 
+            Text="Click on 'Tab 2' to experience the delay before the view is displayed."
+            FontSize="24"
+            FontAttributes="Bold"
+            TextColor="{StaticResource Magenta}"
+            HorizontalTextAlignment="Center"
+            VerticalTextAlignment="Center" />
+
+        <Label 
+            Text="Then click on 'Tab 1' and 'Tab 2' back and forth to see that there is no delay anymore."
+            FontSize="24"
+            FontAttributes="Bold"
+            TextColor="{StaticResource Magenta}"
+            HorizontalTextAlignment="Center"
+            VerticalTextAlignment="Center" 
+            Margin="10, 20, 0, 10"/>
+
+    </VerticalStackLayout>
+
+</ContentView>
