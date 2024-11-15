@@ -7,6 +7,22 @@
              x:DataType="viewModels:MainPageViewModel"
              x:Class="DisplayViewDelay.Pages.MainPage">
 
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="BottomTab" TargetType="tabs:BottomTabItem">
+                <Setter Property="SelectedTabColor" Value="{StaticResource Magenta}" />
+                <Setter Property="FontFamily" Value="OpenSansExtraBold" />
+                <Setter Property="UnselectedLabelColor" Value="{StaticResource Black}" />
+                <Setter Property="UnselectedIconColor" Value="{StaticResource Black}" />
+                <Setter Property="IconSize" Value="24" />
+                <Setter Property="LabelSize" Value="14" />
+            </Style>
+        </ResourceDictionary>
+        <viewModels:CalculateViewModel x:Key="CalculateViewModel" />
+    </ContentPage.Resources>
+
+
     <Grid>
         <Grid x:Name="MainPageViewGrid" RowDefinitions="*, 55">
 
