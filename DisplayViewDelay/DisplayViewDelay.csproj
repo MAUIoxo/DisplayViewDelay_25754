@@ -35,6 +35,48 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(TargetFramework)'=='net8.0-ios'">
+		<EnableAssemblyILStripping>false</EnableAssemblyILStripping>
+		<CodesignKey>Apple Development: Created via API (7LTS3559PZ)</CodesignKey>
+		<CodesignProvision>VS Codesign Provisioning Profile</CodesignProvision>
+		<ProvisioningType>manual</ProvisioningType>
+	</PropertyGroup>
+
+
+	<!-- Disable Trimming for DevExpress on Android/iOS -->
+	<PropertyGroup>
+		<DXConfigureTrimming>false</DXConfigureTrimming>
+	</PropertyGroup>
+
+	<!-- iOS (Release) -->
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
+		<!-- Specifies the target platform and architecture for the build.
+			 ios-arm64 indicates that the app is being built for iOS devices 
+			 (real hardware) using the 64-bit ARM architecture, which is required 
+			 for modern iPhones and iPads. This ensures compatibility with Apple's 
+			 devices and enables the app to take advantage of ARM-specific optimizations. -->
+		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+
+		<!-- Optimization enabled for Performance -->
+		<Optimize>true</Optimize>
+
+		<!-- AOT Compilation enabled -->
+		<RunAOTCompilation>false</RunAOTCompilation>
+
+		<!-- Link SDK Assemblies Only to Reduce Size -->
+		<MtouchLink>SdkOnly</MtouchLink>
+
+		<!-- Use LLVM for Additional Code Optimization -->
+		<MtouchUseLlvm>true</MtouchUseLlvm>
+
+		<!-- Use Interpretation since AOT is disabled -->
+		<MtouchInterpreter>all</MtouchInterpreter>
+		<MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
+		<MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
